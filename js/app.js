@@ -1,14 +1,31 @@
 /*
  * Create a list that holds all of your cards
  */
-
+var listCard = ["fa-diamond", "fa-diamond",
+                "fa-paper-plane-o", "fa-paper-plane-o",
+                "fa-anchor", "fa-anchor",
+                "fa-bolt", "fa-bolt",
+                "fa-cube", "fa-cube",
+                "fa-leaf", "fa-leaf",
+                "fa-bicycle", "fa-bicycle",
+                "fa-bomb", "fa-bomb"];
 
 /*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+* Display the cards on the page
+*   - shuffle the list of cards using the provided "shuffle" method below
+*   - loop through each card and create its HTML
+*   - add each card's HTML to the page
+*/
+
+var shuffledDeck = shuffle(listCard);
+
+var deck = $('.deck');
+
+for(var i = 0; i < listCard.length; i++){
+  deck.append('<li class="card"><i class="fa ' + shuffledDeck[i] + '"></li>');
+}
+
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -27,6 +44,19 @@ function shuffle(array) {
 
 
 /*
+$(".deck").click(function(){
+  alert( "Handler for .click() called." );
+  $(this).toggleClass("card open show");
+});
+//When the card is clicked I want it to turn and show the other side of the card.
+function flipCard(){
+    $(".card").click(function(){
+      alert( "Handler for .click() called." );
+      $(this).toggleClass("card open show");
+    });
+}
+*/
+/*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
  *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
@@ -36,3 +66,13 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+
+
+
+
+
+
+
+
+ 
