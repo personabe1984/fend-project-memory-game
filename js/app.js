@@ -53,36 +53,32 @@ function noMatch(){
 var card = deck.children();
 
 card.click(function(){
-  var classValue = $(this).children().attr("class");
-  $(this).toggleClass("open show");
+  var temp = $(this);
+  var classValue = temp.children().attr("class");
+  temp.addClass("open show");
   //alert("Class Value" + classValue );
   //The first time user picks the card
   if(openAndMatchCardsCheck.length === 0){
     openAndMatchCardsCheck.push(classValue);
-    previousCardHolder.push($(this));
+    previousCardHolder.push(temp);
   }else if(openAndMatchCardsCheck.length === 1){
     openAndMatchCardsCheck.push(classValue);
 
     if(openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1]){
-      $(this).toggleClass("match");
-      previousCardHolder[0].toggleClass("match");
+      temp.addClass("match");
+      previousCardHolder[0].addClass("match");
       previousCardHolder = [];
       openAndMatchCardsCheck = [];
     }else{
       function noMatch(){
-        previousCardHolder[0].toggleClass("open show");
-        $(this).toggleClass("open show");
+        previousCardHolder[0].removeClass("open show");
+        temp.removeClass("open show");
         openAndMatchCardsCheck = [];
         previousCardHolder = [];
       }
       setTimeout(noMatch,700);
     }
   }
-
-
-
-
-
 });
 
 
