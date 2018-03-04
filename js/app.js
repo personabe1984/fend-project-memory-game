@@ -9,7 +9,9 @@ var listCard = ["fa-diamond", "fa-diamond",
                 "fa-leaf", "fa-leaf",
                 "fa-bicycle", "fa-bicycle",
                 "fa-bomb", "fa-bomb"];
-
+var moves = 0;
+var openAndMatchCardsCheck = [];
+var previousCardHolder = [];
 /*
 * Display the cards on the page
 *   - shuffle the list of cards using the provided "shuffle" method below
@@ -17,15 +19,14 @@ var listCard = ["fa-diamond", "fa-diamond",
 *   - add each card's HTML to the page
 */
 
-var shuffledDeck = shuffle(listCard);
-
+//I need to delete all of the previous cards in the board
+//function getNewShuffledDeck(){
 var deck = $('.deck');
-
+var shuffledDeck = shuffle(listCard);
 for(var i = 0; i < listCard.length; i++){
   deck.append('<li class="card"><i class="fa ' + shuffledDeck[i] + '"></li>');
 }
-
-
+//}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -42,7 +43,57 @@ function shuffle(array) {
     return array;
 }
 
+//function newGame(){
+//  moves = 0;
+//  getNewShuffledDeck();
+//}
+function noMatch(){
 
+}
+var card = deck.children();
+
+card.click(function(){
+  var classValue = $(this).children().attr("class");
+  $(this).toggleClass("open show");
+  //alert("Class Value" + classValue );
+  //The first time user picks the card
+  if(openAndMatchCardsCheck.length === 0){
+    openAndMatchCardsCheck.push(classValue);
+    previousCardHolder.push($(this));
+  }else if(openAndMatchCardsCheck.length === 1){
+    openAndMatchCardsCheck.push(classValue);
+
+    if(openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1]){
+      $(this).toggleClass("match");
+      previousCardHolder[0].toggleClass("match");
+      previousCardHolder = [];
+      openAndMatchCardsCheck = [];
+    }else{
+      function noMatch(){
+        previousCardHolder[0].toggleClass("open show");
+        $(this).toggleClass("open show");
+        openAndMatchCardsCheck = [];
+        previousCardHolder = [];
+      }
+      setTimeout(noMatch,700);
+    }
+  }
+
+
+
+
+
+});
+
+
+
+/*Have an array to hold the value.
+  if the length of the array is less than 2 then start camparing
+  case one
+    if the card match
+  case two
+    if the card does not match
+*/
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -53,9 +104,3 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-var card = deck.children();
-
-card.click(function(){
-  //alert( "Handler for .click() called." );
-  $(this).toggleClass("open show");
-});
