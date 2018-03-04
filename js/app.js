@@ -47,9 +47,9 @@ function shuffle(array) {
 //  moves = 0;
 //  getNewShuffledDeck();
 //}
-function noMatch(){
+//function noMatch(){
 
-}
+//}
 var card = deck.children();
 var numOfOpenCard = 0;
 
@@ -66,7 +66,7 @@ card.click(function(){
   }else if(openAndMatchCardsCheck.length === 1 && numOfOpenCard === 1){
     openAndMatchCardsCheck.push(classValue);
     numOfOpenCard++;
-    if(openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1]){
+    if(openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1] && numOfOpenCard == 2){
       temp.addClass("match");
       previousCardHolder[0].addClass("match");
       previousCardHolder.pop();
@@ -80,7 +80,7 @@ card.click(function(){
         openAndMatchCardsCheck = [];
         previousCardHolder.pop();
       }
-      setTimeout(noMatch,700);
+      setTimeout(noMatch,300);
     }
   }
 });
