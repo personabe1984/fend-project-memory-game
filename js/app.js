@@ -51,6 +51,7 @@ function noMatch(){
 
 }
 var card = deck.children();
+var numOfOpenCard = 0;
 
 card.click(function(){
   var temp = $(this);
@@ -58,23 +59,26 @@ card.click(function(){
   temp.addClass("open show");
   //alert("Class Value" + classValue );
   //The first time user picks the card
-  if(openAndMatchCardsCheck.length === 0){
+  if(openAndMatchCardsCheck.length === 0 && numOfOpenCard === 0){
     openAndMatchCardsCheck.push(classValue);
     previousCardHolder.push(temp);
-  }else if(openAndMatchCardsCheck.length === 1){
+    numOfOpenCard++;
+  }else if(openAndMatchCardsCheck.length === 1 && numOfOpenCard === 1){
     openAndMatchCardsCheck.push(classValue);
-
+    numOfOpenCard++;
     if(openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1]){
       temp.addClass("match");
       previousCardHolder[0].addClass("match");
-      previousCardHolder = [];
+      previousCardHolder.pop();
       openAndMatchCardsCheck = [];
-    }else{
+      numOfOpenCard = 0;
+    }else if(numOfOpenCard === 2){
       function noMatch(){
+        numOfOpenCard = 0;
         previousCardHolder[0].removeClass("open show");
         temp.removeClass("open show");
         openAndMatchCardsCheck = [];
-        previousCardHolder = [];
+        previousCardHolder.pop();
       }
       setTimeout(noMatch,700);
     }
