@@ -1,17 +1,20 @@
+
+
 /*
  * Create a list that holds all of your cards
  */
-var listCard = ["fa-diamond", "fa-diamond",
-                "fa-paper-plane-o", "fa-paper-plane-o",
-                "fa-anchor", "fa-anchor",
-                "fa-bolt", "fa-bolt",
-                "fa-cube", "fa-cube",
-                "fa-leaf", "fa-leaf",
-                "fa-bicycle", "fa-bicycle",
-                "fa-bomb", "fa-bomb"];
-var moves = 0;
-var openAndMatchCardsCheck = [];
-var previousCardHolder = [];
+ var listCard = ["fa-diamond", "fa-diamond",
+     "fa-paper-plane-o", "fa-paper-plane-o",
+     "fa-anchor", "fa-anchor",
+     "fa-bolt", "fa-bolt",
+     "fa-cube", "fa-cube",
+     "fa-leaf", "fa-leaf",
+     "fa-bicycle", "fa-bicycle",
+     "fa-bomb", "fa-bomb"
+ ];
+ var moves = 0;
+ var openAndMatchCardsCheck = [];
+ var previousCardHolder = [];
 /*
 * Display the cards on the page
 *   - shuffle the list of cards using the provided "shuffle" method below
@@ -23,10 +26,10 @@ var previousCardHolder = [];
 //function getNewShuffledDeck(){
 var deck = $('.deck');
 var shuffledDeck = shuffle(listCard);
-for(var i = 0; i < listCard.length; i++){
-  deck.append('<li class="card"><i class="fa ' + shuffledDeck[i] + '"></li>');
+for (var i = 0; i < listCard.length; i++) {
+    deck.append('<li class="card"><i class="fa ' + shuffledDeck[i] + '"></li>');
 }
-//}
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -43,57 +46,34 @@ function shuffle(array) {
     return array;
 }
 
-//function newGame(){
-//  moves = 0;
-//  getNewShuffledDeck();
-//}
-//function noMatch(){
-
-//}
 var card = deck.children();
-var numOfOpenCard = 0;
 
-card.click(function(){
-  var temp = $(this);
-  var classValue = temp.children().attr("class");
-  temp.addClass("open show");
-  //alert("Class Value" + classValue );
-  //The first time user picks the card
-  if(openAndMatchCardsCheck.length === 0 && numOfOpenCard === 0){
-    openAndMatchCardsCheck.push(classValue);
-    previousCardHolder.push(temp);
-    numOfOpenCard++;
-  }else if(openAndMatchCardsCheck.length === 1 && numOfOpenCard === 1){
-    openAndMatchCardsCheck.push(classValue);
-    numOfOpenCard++;
-    if(openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1] && numOfOpenCard == 2){
-      temp.addClass("match");
-      previousCardHolder[0].addClass("match");
-      previousCardHolder.pop();
-      openAndMatchCardsCheck = [];
-      numOfOpenCard = 0;
-    }else if(numOfOpenCard === 2){
-      function noMatch(){
-        numOfOpenCard = 0;
-        previousCardHolder[0].removeClass("open show");
-        temp.removeClass("open show");
-        openAndMatchCardsCheck = [];
-        previousCardHolder.pop();
-      }
-      setTimeout(noMatch,300);
+card.click(function() {
+    var temp = $(this);
+    var classValue = temp.children().attr("class");
+    temp.addClass("open show");
+    if (openAndMatchCardsCheck.length === 0) {
+        openAndMatchCardsCheck.push(classValue);
+        previousCardHolder.push(temp);
+    } else if (openAndMatchCardsCheck.length === 1) {
+        openAndMatchCardsCheck.push(classValue);
+        if (openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1] && !(previousCardHolder[0].is(temp))) {
+            temp.addClass("match");
+            previousCardHolder[0].addClass("match");
+            previousCardHolder.pop();
+            openAndMatchCardsCheck = [];
+        } else {
+
+            setTimeout(function() {
+                previousCardHolder[0].removeClass("open show");
+                temp.removeClass("open show");
+                openAndMatchCardsCheck = [];
+                previousCardHolder.pop();
+            }, 300);
+        }
     }
-  }
 });
 
-
-
-/*Have an array to hold the value.
-  if the length of the array is less than 2 then start camparing
-  case one
-    if the card match
-  case two
-    if the card does not match
-*/
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
