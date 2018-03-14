@@ -10,32 +10,72 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
- var sec = 0;
- function pad ( val ) { return val > 9 ? val : "0" + val; }
- setInterval( function(){
-   $("#seconds").html(pad(++sec%60));
-   $("#minutes").html(pad(parseInt(sec/60,10)));
- }, 1000);
-
- var listCard = ["fa-diamond", "fa-diamond",
-     "fa-paper-plane-o", "fa-paper-plane-o",
-     "fa-anchor", "fa-anchor",
-     "fa-bolt", "fa-bolt",
-     "fa-cube", "fa-cube",
-     "fa-leaf", "fa-leaf",
-     "fa-bicycle", "fa-bicycle",
-     "fa-bomb", "fa-bomb"
- ];
- var moves = 0;
- var openAndMatchCardsCheck = [];
- var previousCardHolder = [];
 
 
-var deck = $('.deck');
-var shuffledDeck = shuffle(listCard);
-for (var i = 0; i < listCard.length; i++) {
-    deck.append('<li class="card"><i class="fa ' + shuffledDeck[i] + '"></li>');
-}
+
+ function startGame(){
+   var myTimer = startTimer(0);
+
+   var listCard = ["fa-diamond", "fa-diamond",
+       "fa-paper-plane-o", "fa-paper-plane-o",
+       "fa-anchor", "fa-anchor",
+       "fa-bolt", "fa-bolt",
+       "fa-cube", "fa-cube",
+       "fa-leaf", "fa-leaf",
+       "fa-bicycle", "fa-bicycle",
+       "fa-bomb", "fa-bomb"
+   ];
+
+   var moves = 0;
+   var openAndMatchCardsCheck = [];
+   var previousCardHolder = [];
+   var deck = $('.deck');
+   var shuffledDeck = shuffle(listCard);
+   for (var i = 0; i < listCard.length; i++) {
+       deck.append('<li class="card"><i class="fa ' + shuffledDeck[i] + '"></li>');
+   }
+   //$(".moves").html(moves);
+   var card = deck.children();
+
+   card.click(function() {
+       var temp = $(this);
+       var classValue = temp.children().attr("class");
+       temp.addClass("open show");
+       if (openAndMatchCardsCheck.length === 0) {
+           openAndMatchCardsCheck.push(classValue);
+           previousCardHolder.push(temp);
+           $(".moves").html(++moves);
+       } else if (openAndMatchCardsCheck.length === 1) {
+           openAndMatchCardsCheck.push(classValue);
+           if (openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1] && !(previousCardHolder[0].is(temp))) {
+               temp.addClass("match");
+               previousCardHolder[0].addClass("match");
+               previousCardHolder.pop();
+               openAndMatchCardsCheck = [];
+               $(".moves").html(++moves);
+           } else {
+
+               setTimeout(function() {
+                   previousCardHolder[0].removeClass("open show");
+                   temp.removeClass("open show");
+                   openAndMatchCardsCheck = [];
+                   previousCardHolder.pop();
+               }, 300);
+               $(".moves").html(++moves);
+           }
+       }
+   });
+
+   var restart = $(".restart");
+   restart.click(function(){
+     $(".deck").empty();
+     $(".moves").html(0);
+     clearInterval(myTimer);
+     startGame();
+   });
+
+ }
+
 
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -53,41 +93,28 @@ function shuffle(array) {
     return array;
 }
 
-function startTimer(){
+function startTimer(sec){
+  function pad ( val ) { return val > 9 ? val : "0" + val; }
+  var refresh = setInterval( function(){
+    $("#seconds").html(pad(++sec%60));
+    $("#minutes").html(pad(parseInt(sec/60,10)));
+  }, 1000);
+  return refresh;
+}
 
+//function clearTimer(){
+
+//}
+
+window.onload = function(){
+  startGame();
 }
 
 
-var card = deck.children();
 
-card.click(function() {
-    var temp = $(this);
-    var classValue = temp.children().attr("class");
-    temp.addClass("open show");
-    if (openAndMatchCardsCheck.length === 0) {
-        openAndMatchCardsCheck.push(classValue);
-        previousCardHolder.push(temp);
-        moves++;
-    } else if (openAndMatchCardsCheck.length === 1) {
-        openAndMatchCardsCheck.push(classValue);
-        if (openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1] && !(previousCardHolder[0].is(temp))) {
-            temp.addClass("match");
-            previousCardHolder[0].addClass("match");
-            previousCardHolder.pop();
-            openAndMatchCardsCheck = [];
-            moves++;
-        } else {
 
-            setTimeout(function() {
-                previousCardHolder[0].removeClass("open show");
-                temp.removeClass("open show");
-                openAndMatchCardsCheck = [];
-                previousCardHolder.pop();
-            }, 300);
-            moves++;
-        }
-    }
-});
+
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
