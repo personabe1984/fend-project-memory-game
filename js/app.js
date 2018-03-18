@@ -11,8 +11,6 @@
  *   - add each card's HTML to the page
  */
 
-
-
  function startGame(){
    var myTimer = startTimer(0);
 
@@ -26,18 +24,41 @@
        "fa-bomb", "fa-bomb"
    ];
 
+   var star = 3;
    var moves = 0;
    var openAndMatchCardsCheck = [];
    var previousCardHolder = [];
-   var deck = $('.deck');
+   var totalMatchedCards = [];
+   var deck = $(".deck");
    var shuffledDeck = shuffle(listCard);
    for (var i = 0; i < listCard.length; i++) {
        deck.append('<li class="card"><i class="fa ' + shuffledDeck[i] + '"></li>');
    }
-   //$(".moves").html(moves);
+
+   $(".stars").append('<li id="one"><i class="fa fa-star"></i></li>');
+   $(".stars").append('<li id="two"><i class="fa fa-star"></i></li>');
+   $(".stars").append('<li id="three"><i class="fa fa-star"></i></li>');
+
+   function restart(){
+     $(".deck").empty();
+     $(".moves").html(0);
+     clearInterval(myTimer);
+     $(".stars").empty();
+     startGame();
+   }
    var card = deck.children();
 
    card.click(function() {
+       if(star > 1){
+         if (moves > 16 && moves < 24){
+           $("#three").remove();
+           star--;
+         }else if (moves > 24) {
+           $("#two").remove();
+           star--;
+         }
+       }
+
        var temp = $(this);
        var classValue = temp.children().attr("class");
        temp.addClass("open show");
@@ -48,11 +69,27 @@
        } else if (openAndMatchCardsCheck.length === 1) {
            openAndMatchCardsCheck.push(classValue);
            if (openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1] && !(previousCardHolder[0].is(temp))) {
+               totalMatchedCards.push(previousCardHolder[0]);
+               totalMatchedCards.push(temp);
                temp.addClass("match");
                previousCardHolder[0].addClass("match");
                previousCardHolder.pop();
                openAndMatchCardsCheck = [];
                $(".moves").html(++moves);
+               if(totalMatchedCards.length === shuffledDeck.length){
+                 var endGameScreen = $(".end-game");
+                 var time = $("#minutes").text() + ":" + $("#seconds").text();
+                 endGameScreen.append('<p id="time"></p>');
+                 var score = "Time: " + time + " Rating: " + star + " Moves: " + moves;
+                 $("#time").html(score);
+                 $(".end-game").css("display", "flex");
+                 clearInterval(myTimer);
+                 $(".play-again").click(function(){
+                   $(".end-game").css("display", "none");
+                   restart();
+                 });
+
+               }
            } else {
 
                setTimeout(function() {
@@ -66,12 +103,9 @@
        }
    });
 
-   var restart = $(".restart");
-   restart.click(function(){
-     $(".deck").empty();
-     $(".moves").html(0);
-     clearInterval(myTimer);
-     startGame();
+   var restartButton = $(".restart");
+   restartButton.click(function(){
+    restart();
    });
 
  }
@@ -102,17 +136,9 @@ function startTimer(sec){
   return refresh;
 }
 
-//function clearTimer(){
-
-//}
-
 window.onload = function(){
   startGame();
 }
-
-
-
-
 
 
 
