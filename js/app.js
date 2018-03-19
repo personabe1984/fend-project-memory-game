@@ -49,24 +49,22 @@
    var card = deck.children();
 
    card.click(function() {
-       if(star > 1){
-         if (moves > 16 && moves < 24){
-           $("#three").remove();
-           star--;
-         }else if (moves > 24) {
-           $("#two").remove();
-           star--;
-         }
+       if(star > 2 && moves > 16 && moves < 24){
+         $("#three").remove();
+         star--;
+       }else if (star > 1 && moves > 24) {
+         $("#two").remove();
+         star--;
        }
 
        var temp = $(this);
        var classValue = temp.children().attr("class");
        temp.addClass("open show");
-       if (openAndMatchCardsCheck.length === 0) {
+       if (openAndMatchCardsCheck.length === 0 && !temp.hasClass("match")) {
            openAndMatchCardsCheck.push(classValue);
            previousCardHolder.push(temp);
            $(".moves").html(++moves);
-       } else if (openAndMatchCardsCheck.length === 1) {
+       } else if (openAndMatchCardsCheck.length === 1 && !temp.hasClass("match")) {
            openAndMatchCardsCheck.push(classValue);
            if (openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1] && !(previousCardHolder[0].is(temp))) {
                totalMatchedCards.push(previousCardHolder[0]);
