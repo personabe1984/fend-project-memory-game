@@ -26,8 +26,6 @@
 
    var star = 3;
    var moves = 0;
-   var openAndMatchCardsCheck = [];
-   var previousCardHolder = [];
    var totalMatchedCards = [];
    var deck = $(".deck");
    var shuffledDeck = shuffle(listCard);
@@ -47,6 +45,7 @@
      startGame();
    }
    var card = deck.children();
+   var prev = null;
 
    card.click(function() {
        if(star > 2 && moves > 16 && moves < 24){
@@ -57,23 +56,25 @@
          star--;
        }
 
-       var temp = $(this);
-       var classValue = temp.children().attr("class");
-       temp.addClass("open show");
-       if (openAndMatchCardsCheck.length === 0 && !temp.hasClass("match")) {
-           openAndMatchCardsCheck.push(classValue);
-           previousCardHolder.push(temp);
+       var current = $(this);
+       getClassValue = function (node) {
+         return node.children().attr("class");
+       }
+       current.addClass("open show");
+     if (current.hasClass("match")) {
+       return
+     }
+       if (prev === null ) {
+          prev = current
            $(".moves").html(++moves);
-       } else if (openAndMatchCardsCheck.length === 1 && !temp.hasClass("match")) {
-           openAndMatchCardsCheck.push(classValue);
-           if (openAndMatchCardsCheck[0] === openAndMatchCardsCheck[1] && !(previousCardHolder[0].is(temp))) {
-               totalMatchedCards.push(previousCardHolder[0]);
-               totalMatchedCards.push(temp);
-               temp.addClass("match");
-               previousCardHolder[0].addClass("match");
-               previousCardHolder.pop();
-               openAndMatchCardsCheck = [];
+       } else {
+           if (getClassValue(prev) === getClassValue(current) && !(prev.is(current))) {
+               totalMatchedCards.push(prev);
+               totalMatchedCards.push(current);
+               current.addClass("match");
+               prev.addClass("match");
                $(".moves").html(++moves);
+               prev = null
                if(totalMatchedCards.length === shuffledDeck.length){
                  var endGameScreen = $(".end-game");
                  var time = $("#minutes").text() + ":" + $("#seconds").text();
@@ -89,12 +90,11 @@
 
                }
            } else {
-
                setTimeout(function() {
-                   previousCardHolder[0].removeClass("open show");
-                   temp.removeClass("open show");
-                   openAndMatchCardsCheck = [];
-                   previousCardHolder.pop();
+                   prev.removeClass("open show");
+                   current.removeClass("open show");
+                   prev = null
+                   current = null
                }, 300);
                $(".moves").html(++moves);
            }
